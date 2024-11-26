@@ -12,9 +12,9 @@ import javafx.geometry.Pos;
 import javafx.scene.control.*;
 
 public class PrimaryScene extends Application {
-    protected Scene scene;  // Scene should be properly initialized and returned
-    Button red = new Button("Red");
-    Button green = new Button("Green");
+    protected Scene scene;
+    Button xCoor = new Button("X Coor:");
+    Button yCoor = new Button("Y Coor:");
     TextField xField = new TextField();
     TextField yField = new TextField();
 
@@ -23,6 +23,12 @@ public class PrimaryScene extends Application {
         g.strokeLine(50, 400, 550, 400);
         g.strokeLine(200, 50, 200, 550);
         g.strokeLine(400, 50, 400, 550);
+        g.strokeLine(50, 100, 550, 100);
+        g.strokeLine(100, 50, 100, 550);
+        g.strokeLine(50, 300, 550, 300);
+        g.strokeLine(300, 50, 300, 550);
+        g.strokeLine(500, 50, 500, 550);
+        g.strokeLine(50, 500, 550, 500);
     }
 
     public PrimaryScene() {
@@ -30,17 +36,18 @@ public class PrimaryScene extends Application {
     }
 
     public void initializeScene() {
+    	//Need getSocket to continue connection
         int width = 600;
         int height = 600;
         Canvas canvas = new Canvas(width, height);
         drawPicture(canvas.getGraphicsContext2D(), width, height);
-        HBox controlBar = new HBox(red, green, xField, yField);
+        HBox controlBar = new HBox(xCoor, yCoor, xField, yField);
         controlBar.setAlignment(Pos.CENTER);
         BorderPane root = new BorderPane();
         root.setCenter(canvas);
         root.setBottom(controlBar);
         root.setStyle("-fx-border-width: 4px; -fx-border-color: #444");
-        scene = new Scene(root);  // Initialize the scene here
+        scene = new Scene(root);
     }
 
     public Scene getScene() {
@@ -49,7 +56,7 @@ public class PrimaryScene extends Application {
         }
         return scene;
     }
-
+    
     @Override
     public void start(Stage stage) {
         stage.setScene(getScene());
