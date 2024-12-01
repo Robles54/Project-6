@@ -142,7 +142,6 @@ public class PrimaryScene extends Application {
 					int yPos = 50 + (row - 1) * 100;
 					graphicsContext.setFill(Color.RED);
 					graphicsContext.fillOval(xPos + 75, yPos + 75, 50, 50);
-//					sendBack(true);
 				}
 				else {
 					System.out.println("HERE3");
@@ -161,17 +160,6 @@ public class PrimaryScene extends Application {
 			System.out.println("Error receiving coordinate: " + e);
 		}
 	}
-
-//	public void sendBack(boolean x) {
-//		if(x == true) {
-//			try {
-//				PrintWriter outgoing = new PrintWriter(socket.getOutputStream());
-//				outgoing.println("HITORMISS");
-//			}catch (IOException e) {
-//				e.printStackTrace();
-//			}
-//		}
-//	}
 
 	public Scene getScene() {
 		if (scene == null) {
