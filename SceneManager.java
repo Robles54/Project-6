@@ -44,10 +44,12 @@ public class SceneManager {
 		case settings:
 			stage.setScene(settingsScene.getScene());
 			break;
-		case primary:
-			stage.setScene(primaryScene.getScene());
-			break;
-		}
+		 case primary:
+             // Call resetSocket() to reinitialize the socket in PrimaryScene
+             primaryScene.resetSocket();
+             stage.setScene(primaryScene.getScene());
+             break;
+     }
 	}
 
 	public static SceneType getLastScene() {return lastSceneType;}
