@@ -10,11 +10,12 @@ public class SceneManager {
 	private static SettingsScene settingsScene;
 	private static PrimaryScene primaryScene = null;  // Store a single instance of PrimaryScene
 	private static ShipsScene shipsScene;
+	private static SocketScene socketScene;
 	private static SceneType currentSceneType;
 	private static SceneType lastSceneType;
 
 	public enum SceneType {
-		start, settings, primary, ships, lose, win
+		start, settings, primary, ships, socket
 	}
 
 	public SceneManager() {
@@ -22,6 +23,7 @@ public class SceneManager {
 		primaryScene = new PrimaryScene();
 		settingsScene = new SettingsScene();
 		shipsScene = new ShipsScene();
+		socketScene = new SocketScene();
 	}
 
 	public static synchronized void setSocket(Socket setConnection) {
@@ -56,6 +58,9 @@ public class SceneManager {
 			break;
 		case ships:
 			stage.setScene(shipsScene.getScene());
+			break;
+		case socket:
+			stage.setScene(socketScene.getScene());
 			break;
 		}
 	}

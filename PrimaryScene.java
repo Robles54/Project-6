@@ -20,7 +20,7 @@ import javafx.scene.control.*;
 public class PrimaryScene extends Application {
 	protected Scene scene;
 	Button send = new Button("Send Coor");
-	Button recieve = new Button("Recieve Coor");
+	Button receive = new Button("Receive Coor");
 	TextField xField = new TextField();
 	TextField yField = new TextField();
 	Socket socket;
@@ -78,11 +78,11 @@ public class PrimaryScene extends Application {
 		Canvas canvas = new Canvas(width, height);
 		graphicsContext = canvas.getGraphicsContext2D();
 		drawPicture(graphicsContext, width, height);
-		HBox controlBar = new HBox(send, xField, yField, recieve);
+		HBox controlBar = new HBox(send, xField, yField, receive);
 		controlBar.setAlignment(Pos.CENTER);
 		BorderPane root = new BorderPane();
 		send.setOnAction(e -> sendServer());
-		recieve.setOnAction(e -> recieveServer());
+		receive.setOnAction(e -> receiveServer());
 		root.setCenter(canvas);
 		root.setBottom(controlBar);
 		root.setStyle("-fx-border-width: 4px; -fx-border-color: #444");
@@ -122,7 +122,7 @@ public class PrimaryScene extends Application {
 		}
 	}
 
-	public void recieveServer() {
+	public void receiveServer() {
 		try {
 			if (socket != null) {
 				BufferedReader incoming = new BufferedReader(new InputStreamReader(socket.getInputStream()));
@@ -130,10 +130,6 @@ public class PrimaryScene extends Application {
 				System.out.println("Received from server: " + coor);
 				int count=0;
 				if(ships[0].equals(coor)||ships[1].equals(coor)||ships[2].equals(coor)) {
-					count++;
-					if(count==3) {
-						SceneManager.setScene(SceneManager.SceneType.lose);
-					}
 					System.out.println("HERE2");
 					String[] parts = coor.split(",");
 					int col = Integer.parseInt(parts[0]);
@@ -160,6 +156,7 @@ public class PrimaryScene extends Application {
 			System.out.println("Error receiving coordinate: " + e);
 		}
 	}
+
 
 	public Scene getScene() {
 		if (scene == null) {

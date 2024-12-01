@@ -22,14 +22,16 @@ public class StartingScene extends SceneBasic {
 		bar.addButton("Start", e -> start());
 		bar.addButton("Settings", e -> SceneManager.setScene(SceneManager.SceneType.settings));
 		bar.addButton("Place Ships", e -> SceneManager.setScene(SceneManager.SceneType.ships));
+		bar.addButton("Set Socket", e -> SceneManager.setScene(SceneManager.SceneType.socket));
 		root.getChildren().addAll(bar, messageLabel);
 	}
 	
 	private void start() {
 		try {
 			System.out.println("Started");
-			Socket socket = new Socket(hostName, LISTENING_PORT);
-			SceneManager.setSocket(socket);
+			Socket socket = SceneManager.getSocket();
+			//Socket socket = new Socket(hostName, LISTENING_PORT);
+			//SceneManager.setSocket(socket);
 			SceneManager.setScene(SceneManager.SceneType.primary);
 		} catch (Exception e) {
 			messageLabel.setText("Error connecting to server: " + e);

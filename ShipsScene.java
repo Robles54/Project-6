@@ -25,8 +25,8 @@ public class ShipsScene extends SceneBasic{
 		shipsLoc[0] = x1.getText() + "," + y1.getText();
 		shipsLoc[1] = x2.getText() + "," + y2.getText();
 		shipsLoc[2] = x3.getText() + "," + y3.getText();
-		PrimaryScene primaryScene = new PrimaryScene();
-	    primaryScene.setShips(shipsLoc);
+//		PrimaryScene primaryScene = new PrimaryScene();
+//	    primaryScene.setShips(shipsLoc);
 	    SceneManager.setScene(SceneManager.SceneType.start);
 	}
 	
