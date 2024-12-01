@@ -35,7 +35,6 @@ public class WorkerThread extends Thread{
 				if(incoming1.readLine() != null) {
 					sendCoor(incoming1, outgoing2);
 				}
-
 				if(incoming2.readLine() != null) {
 					sendCoor(incoming2, outgoing1);
 				}

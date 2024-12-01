@@ -24,6 +24,10 @@ public class PrimaryScene extends Application {
 	TextField xField = new TextField();
 	TextField yField = new TextField();
 	Socket socket;
+	String[] ships = ShipsScene.getShips();
+	private GraphicsContext graphicsContext;
+
+
 
 	public void drawPicture(GraphicsContext g, int width, int height) {
 		g.strokeLine(50, 200, 550, 200);
@@ -36,14 +40,32 @@ public class PrimaryScene extends Application {
 		g.strokeLine(300, 50, 300, 550);
 		g.strokeLine(500, 50, 500, 550);
 		g.strokeLine(50, 500, 550, 500);
-	    g.strokeText("1", 130, 40);
-	    g.strokeText("2", 230, 40);
-	    g.strokeText("3", 330, 40);
-	    g.strokeText("4", 430, 40);
-	    g.strokeText("1", 30, 130);
-	    g.strokeText("2", 30, 230);
-	    g.strokeText("3", 30, 330);
-	    g.strokeText("4", 30, 430);
+		g.strokeText("1", 130, 40);
+		g.strokeText("2", 230, 40);
+		g.strokeText("3", 330, 40);
+		g.strokeText("4", 430, 40);
+		g.strokeText("1", 30, 130);
+		g.strokeText("2", 30, 230);
+		g.strokeText("3", 30, 330);
+		g.strokeText("4", 30, 430);
+
+	}
+
+	public void drawShips() {
+		if (ships != null) {
+			for (String coordinate : ships) {
+				String[] parts = coordinate.split(",");
+				try {
+					int col = Integer.parseInt(parts[0]);
+					int row = Integer.parseInt(parts[1]);
+					int xPos = 50 + (col - 1) * 100;
+					int yPos = 50 + (row - 1) * 100;
+					graphicsContext.strokeOval(xPos + 75, yPos + 75, 50, 50);
+				} catch (NumberFormatException e) {
+					System.out.println("Warning: Invalid number format in coordinate: " + coordinate);
+				}
+			}
+		}
 	}
 
 	public PrimaryScene() {
@@ -51,11 +73,11 @@ public class PrimaryScene extends Application {
 	}
 
 	public void initializeScene() {
-
 		int width = 600;
 		int height = 600;
 		Canvas canvas = new Canvas(width, height);
-		drawPicture(canvas.getGraphicsContext2D(), width, height);
+		graphicsContext = canvas.getGraphicsContext2D();
+		drawPicture(graphicsContext, width, height);
 		HBox controlBar = new HBox(send, xField, yField, recieve);
 		controlBar.setAlignment(Pos.CENTER);
 		BorderPane root = new BorderPane();
@@ -65,6 +87,11 @@ public class PrimaryScene extends Application {
 		root.setBottom(controlBar);
 		root.setStyle("-fx-border-width: 4px; -fx-border-color: #444");
 		scene = new Scene(root);
+	}
+
+	public void setShips(String[] newShips) {
+		this.ships = newShips;
+		drawShips();
 	}
 
 	public void resetSocket() {
@@ -99,7 +126,34 @@ public class PrimaryScene extends Application {
 		try {
 			if (socket != null) {
 				BufferedReader incoming = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-				System.out.println("Received from server: " + incoming.readLine());
+				String coor = incoming.readLine();
+				System.out.println("Received from server: " + coor);
+				int count=0;
+				if(ships[0].equals(coor)||ships[1].equals(coor)||ships[2].equals(coor)) {
+					count++;
+					if(count==3) {
+						SceneManager.setScene(SceneManager.SceneType.lose);
+					}
+					System.out.println("HERE2");
+					String[] parts = coor.split(",");
+					int col = Integer.parseInt(parts[0]);
+					int row = Integer.parseInt(parts[1]);
+					int xPos = 50 + (col - 1) * 100;
+					int yPos = 50 + (row - 1) * 100;
+					graphicsContext.setFill(Color.RED);
+					graphicsContext.fillOval(xPos + 75, yPos + 75, 50, 50);
+//					sendBack(true);
+				}
+				else {
+					System.out.println("HERE3");
+					String[] parts = coor.split(",");
+					int col = Integer.parseInt(parts[0]);
+					int row = Integer.parseInt(parts[1]);
+					int xPos = 50 + (col - 1) * 100;
+					int yPos = 50 + (row - 1) * 100;
+					graphicsContext.setFill(Color.BLACK);
+					graphicsContext.fillOval(xPos + 75, yPos + 75, 50, 50);
+				}
 			} else {
 				System.out.println("Socket is null, cannot receive coordinates.");
 			}
@@ -107,6 +161,17 @@ public class PrimaryScene extends Application {
 			System.out.println("Error receiving coordinate: " + e);
 		}
 	}
+
+//	public void sendBack(boolean x) {
+//		if(x == true) {
+//			try {
+//				PrintWriter outgoing = new PrintWriter(socket.getOutputStream());
+//				outgoing.println("HITORMISS");
+//			}catch (IOException e) {
+//				e.printStackTrace();
+//			}
+//		}
+//	}
 
 	public Scene getScene() {
 		if (scene == null) {

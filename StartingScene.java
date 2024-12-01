@@ -21,9 +21,8 @@ public class StartingScene extends SceneBasic {
 		ButtonBar bar = new ButtonBar();
 		bar.addButton("Start", e -> start());
 		bar.addButton("Settings", e -> SceneManager.setScene(SceneManager.SceneType.settings));
+		bar.addButton("Place Ships", e -> SceneManager.setScene(SceneManager.SceneType.ships));
 		root.getChildren().addAll(bar, messageLabel);
-	
-
 	}
 	
 	private void start() {
