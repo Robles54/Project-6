@@ -1,5 +1,3 @@
-
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -27,9 +25,8 @@ public class PrimaryScene extends Application {
 	String[] ships = ShipsScene.getShips();
 	private GraphicsContext graphicsContext;
 
-
-
 	public void drawPicture(GraphicsContext g, int width, int height) {
+		g.setFill(Color.WHITE);
 		g.strokeLine(50, 200, 550, 200);
 		g.strokeLine(50, 400, 550, 400);
 		g.strokeLine(200, 50, 200, 550);
@@ -48,25 +45,28 @@ public class PrimaryScene extends Application {
 		g.strokeText("2", 30, 230);
 		g.strokeText("3", 30, 330);
 		g.strokeText("4", 30, 430);
-
 	}
 
 	public void drawShips() {
-		if (ships != null) {
-			for (String coordinate : ships) {
-				String[] parts = coordinate.split(",");
-				try {
-					int col = Integer.parseInt(parts[0]);
-					int row = Integer.parseInt(parts[1]);
-					int xPos = 50 + (col - 1) * 100;
-					int yPos = 50 + (row - 1) * 100;
-					graphicsContext.strokeOval(xPos + 75, yPos + 75, 50, 50);
-				} catch (NumberFormatException e) {
-					System.out.println("Warning: Invalid number format in coordinate: " + coordinate);
-				}
-			}
-		}
+	    Color shipColor = SettingsScene.getSelectedColor();
+	    graphicsContext.setStroke(shipColor);
+
+	    if (ships != null) {
+	        for (String coordinate : ships) {
+	            String[] parts = coordinate.split(",");
+	            try {
+	                int col = Integer.parseInt(parts[0]);
+	                int row = Integer.parseInt(parts[1]);
+	                int xPos = 50 + (col - 1) * 100;
+	                int yPos = 50 + (row - 1) * 100;
+	                graphicsContext.strokeOval(xPos + 75, yPos + 75, 50, 50);
+	            } catch (NumberFormatException e) {
+	                System.out.println("Warning: Invalid number format in coordinate: " + coordinate);
+	            }
+	        }
+	    }
 	}
+
 
 	public PrimaryScene() {
 		initializeScene();
@@ -123,39 +123,32 @@ public class PrimaryScene extends Application {
 	}
 
 	public void receiveServer() {
-		try {
-			if (socket != null) {
-				BufferedReader incoming = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-				String coor = incoming.readLine();
-				System.out.println("Received from server: " + coor);
-				int count=0;
-				if(ships[0].equals(coor)||ships[1].equals(coor)||ships[2].equals(coor)) {
-					System.out.println("HERE2");
-					String[] parts = coor.split(",");
-					int col = Integer.parseInt(parts[0]);
-					int row = Integer.parseInt(parts[1]);
-					int xPos = 50 + (col - 1) * 100;
-					int yPos = 50 + (row - 1) * 100;
-					graphicsContext.setFill(Color.RED);
-					graphicsContext.fillOval(xPos + 75, yPos + 75, 50, 50);
-				}
-				else {
-					System.out.println("HERE3");
-					String[] parts = coor.split(",");
-					int col = Integer.parseInt(parts[0]);
-					int row = Integer.parseInt(parts[1]);
-					int xPos = 50 + (col - 1) * 100;
-					int yPos = 50 + (row - 1) * 100;
-					graphicsContext.setFill(Color.BLACK);
-					graphicsContext.fillOval(xPos + 75, yPos + 75, 50, 50);
-				}
-			} else {
-				System.out.println("Socket is null, cannot receive coordinates.");
-			}
-		} catch (Exception e) {
-			System.out.println("Error receiving coordinate: " + e);
-		}
+	    try {
+	        if (socket != null) {
+	            BufferedReader incoming = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+	            String coor = incoming.readLine();
+	            System.out.println("Received from server: " + coor);
+
+	            String[] parts = coor.split(",");
+	            int col = Integer.parseInt(parts[0]);
+	            int row = Integer.parseInt(parts[1]);
+	            int xPos = 50 + (col - 1) * 100;
+	            int yPos = 50 + (row - 1) * 100;
+
+	            if (ships[0].equals(coor) || ships[1].equals(coor) || ships[2].equals(coor)) {
+	                graphicsContext.setFill(SettingsScene.getSelectedColor());
+	            } else {
+	                graphicsContext.setFill(Color.BLACK);
+	            }
+	            graphicsContext.fillOval(xPos + 75, yPos + 75, 50, 50);
+	        } else {
+	            System.out.println("Socket is null, cannot receive coordinates.");
+	        }
+	    } catch (Exception e) {
+	        System.out.println("Error receiving coordinate: " + e);
+	    }
 	}
+
 
 
 	public Scene getScene() {

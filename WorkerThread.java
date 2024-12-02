@@ -3,6 +3,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.util.HashMap;
 
 public class WorkerThread extends Thread{
 	private Socket client;
@@ -11,6 +12,7 @@ public class WorkerThread extends Thread{
 	PrintWriter outgoing2;
 	BufferedReader incoming1;
 	BufferedReader incoming2;
+	public HashMap <String, SettingsScene> settings;
 
 	public WorkerThread(Socket client, Socket client2) {
 		this.client=client;

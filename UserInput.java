@@ -19,4 +19,8 @@ public class UserInput extends HBox{
 	public String getText() {
 		return textField.getText();
 	}
+	
+	public void setText(String text) {
+		textField.setText(text);
+	}
 }
