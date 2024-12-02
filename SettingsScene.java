@@ -24,13 +24,12 @@ public class SettingsScene extends SceneBasic {
         usernameInput = new UserInput("Username:");
 
         // Color dropdown
-        ComboBox <String> colorDropdown = new ComboBox<>();
+        colorDropdown = new ComboBox<>();
         Label colorLabel = new Label("Select a Color:");
         Color[] colors = {Color.RED, Color.GREEN, Color.BLUE, Color.CYAN, Color.MAGENTA, Color.YELLOW, Color.BLACK, Color.WHITE};
         String[] colorNames = {"Red", "Green", "Blue", "Cyan", "Magenta", "Yellow", "Black", "White"};
         colorDropdown.getItems().addAll(colorNames);
         colorDropdown.setValue("Red");
-//        colorDropdown.setOnAction(e -> currentColor = colors[colorDropdown.getSelectionModel().getSelectedIndex()]);
         colorDropdown.setOnAction(e -> {
             int selectedIndex = colorDropdown.getSelectionModel().getSelectedIndex();
             if (selectedIndex >= 0 && selectedIndex < colors.length) {
@@ -38,11 +37,11 @@ public class SettingsScene extends SceneBasic {
             }
         });
 
-
         // Buttons
         ButtonBar bar = new ButtonBar();
         bar.addButton("Save", e -> apply());
         bar.addButton("Back", e -> SceneManager.setScene(SceneManager.SceneType.start));
+        bar.addButton("Open Previous Settings", e-> loadUserSettings());
 
         // Layout
         VBox layout = new VBox(10);
@@ -50,7 +49,9 @@ public class SettingsScene extends SceneBasic {
         layout.setAlignment(Pos.CENTER);
         layout.getChildren().addAll(usernameInput, colorLabel, colorDropdown, bar, errorMessage);
         root.getChildren().add(layout);
+
     }
+
 
     private void apply() {
         String username = usernameInput.getText().trim();
@@ -97,6 +98,34 @@ public class SettingsScene extends SceneBasic {
             e.printStackTrace();
         }
     }
+    
+    private void loadUserSettings() {
+        if (!settingsFile.exists()) return;
+
+        try {
+            HashMap<String, String> userSettings = loadSettings();
+
+            String username = usernameInput.getText().trim();
+            if (userSettings.containsKey(username)) {
+                String colorName = userSettings.get(username);
+
+                colorDropdown.setValue(colorName);
+
+                String[] colorNames = {"Red", "Green", "Blue", "Cyan", "Magenta", "Yellow", "Black", "White"};
+                Color[] colors = {Color.RED, Color.GREEN, Color.BLUE, Color.CYAN, Color.MAGENTA, Color.YELLOW, Color.BLACK, Color.WHITE};
+                for (int i = 0; i < colorNames.length; i++) {
+                    if (colorNames[i].equalsIgnoreCase(colorName)) {
+                        selectedColor = colors[i];
+                        break;
+                    }
+                }
+            }
+        } catch (Exception e) {
+            errorMessage.setText("Error loading user settings.");
+            e.printStackTrace();
+        }
+    }
+
 
 
     
