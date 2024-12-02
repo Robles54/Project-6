@@ -11,6 +11,7 @@ import java.util.HashMap;
 public class SettingsScene extends SceneBasic {
     private Label errorMessage = new Label();
     private UserInput usernameInput; // User can type their username here
+    private static String currentUsername;
     private ComboBox<String> colorDropdown;
     private Color currentColor = Color.RED;
     private final File settingsFile = new File("settings.xml");
@@ -19,8 +20,10 @@ public class SettingsScene extends SceneBasic {
     public SettingsScene() {
         super("Settings");
 
+        // Username input
         usernameInput = new UserInput("Username:");
 
+        // Color dropdown
         ComboBox <String> colorDropdown = new ComboBox<>();
         Label colorLabel = new Label("Select a Color:");
         Color[] colors = {Color.RED, Color.GREEN, Color.BLUE, Color.CYAN, Color.MAGENTA, Color.YELLOW, Color.BLACK, Color.WHITE};
@@ -35,10 +38,13 @@ public class SettingsScene extends SceneBasic {
             }
         });
 
+
+        // Buttons
         ButtonBar bar = new ButtonBar();
         bar.addButton("Save", e -> apply());
         bar.addButton("Back", e -> SceneManager.setScene(SceneManager.SceneType.start));
 
+        // Layout
         VBox layout = new VBox(10);
         layout.setPadding(new Insets(10));
         layout.setAlignment(Pos.CENTER);
@@ -52,28 +58,54 @@ public class SettingsScene extends SceneBasic {
             errorMessage.setText("Username cannot be empty.");
             return;
         }
-
-        saveSettings(username, currentColor);
+        saveSettings(username, selectedColor);
         errorMessage.setText("Settings saved for user: " + username);
         System.out.println("Settings applied for user: " + username);
-        System.out.println("Selected Color: " + currentColor);
+        System.out.println("Selected Color: " + selectedColor);
     }
 
     private void saveSettings(String username, Color color) {
         try {
             HashMap<String, String> userSettings = loadSettings();
 
-            userSettings.put(username, color.toString());
+            String[] colorNames = {"Red", "Green", "Blue", "Cyan", "Magenta", "Yellow", "Black", "White"};
+            Color[] colors = {Color.RED, Color.GREEN, Color.BLUE, Color.CYAN, Color.MAGENTA, Color.YELLOW, Color.BLACK, Color.WHITE};
 
-            writeSettingsToFile(userSettings);
+            String colorName = "Unknown";
+            for (int i = 0; i < colors.length; i++) {
+                if (colors[i].equals(color)) {
+                    colorName = colorNames[i];
+                    break;
+                }
+            }
+
+            userSettings.put(username, colorName);
+            try (PrintWriter writer = new PrintWriter(settingsFile)) {
+                writer.println("<settings>");
+                for (String user : userSettings.keySet()) {
+                    writer.println("  <user>");
+                    writer.println("    <name>" + user + "</name>");
+                    writer.println("    <color>" + userSettings.get(user) + "</color>");
+                    writer.println("  </user>");
+                }
+                writer.println("</settings>");
+            }
+
+            System.out.println("Settings updated for user: " + username + " with color: " + colorName);
         } catch (Exception e) {
             errorMessage.setText("Error saving settings.");
             e.printStackTrace();
         }
     }
+
+
     
     public static Color getSelectedColor() {
     	return selectedColor;
+    }
+    
+    public static String getCurrentUsername() {
+    	return currentUsername;
     }
 
     private HashMap<String, String> loadSettings() {
