@@ -1,11 +1,15 @@
 <settings>
   <user>
     <name>userOne</name>
-    <color>0xffff00ff</color>
+    <color>Magenta</color>
   </user>
   <user>
     <name>playerTwo</name>
-    <color>0xff0000ff</color>
+    <color>Red</color>
+  </user>
+  <user>
+    <name>userTwo</name>
+    <color>Yellow</color>
   </user>
   <user>
     <name>Player2</name>
@@ -17,6 +21,6 @@
   </user>
   <user>
     <name>playerOne</name>
-    <color>0xff0000ff</color>
+    <color>Blue</color>
   </user>
 </settings>
